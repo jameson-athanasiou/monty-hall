@@ -2,9 +2,11 @@ import random
 
 print('Running game...')
 
-winners = 0
-losers = 0
-loops = 0
+first_winners = 0
+first_losers = 0
+new_door_winners = 0
+new_door_losers = 0
+loops = 10000
 
 
 door_one = {
@@ -58,10 +60,12 @@ def selectNewDoor():
         elif door['selected'] == False and door['removed'] == False:
             door['selected'] = True
 
-def determineOutcome(selected_index):
+def determineOutcome(newDoorSelected):
     global doors
-    global winners
-    global losers
+    global first_winners
+    global first_losers
+    global new_door_winners
+    global new_door_losers
 
     # is_win = doors[selected_index]['gold']
     is_win = False
@@ -71,32 +75,40 @@ def determineOutcome(selected_index):
             is_win = True
             break;
 
-    print('is_win', is_win)
-    print(doors[selected_index])
-    print(doors[selected_index]['gold'])
-
     if is_win:
-        winners = winners + 1
+        if newDoorSelected:
+            new_door_winners += 1
+        else:
+            first_winners = first_winners + 1
+
         print('winner winner chicken dinner')
+
     else:
-        losers = losers + 1
+        if newDoorSelected:
+            new_door_losers += 1
+        else:
+            first_losers = first_losers + 1
+
         print('u suck')
 
-    print(selected_index)
-    print(doors)
-
 def getFinalTally():
-    print(winners, 'winners')
-    print(losers, 'losers')
+    print(first_winners, 'Winners while keeping their door')
+    print(first_losers, 'Losers while keeping their door')
 
-    winning_percentage = winners / loops
+    first_winning_percentage = (first_winners / loops) * 100
 
-    print(winning_percentage * 100, 'win percantage')
+    print('Keeping your door wins', first_winning_percentage, '% of the time')
+    print('-----------------------------------')
 
+    print(new_door_winners, 'Winners while choosing a new door')
+    print(new_door_losers, 'Losers while choosing a new door')
 
-def runGame():
-    global loops
+    new_door_winning_percentage = (new_door_winners / loops) * 100
 
+    print('Choosing a new door wins', new_door_winning_percentage, '% of the time')
+    print('-----------------------------------')
+
+def runGame(chooseNewDoor):
     setupDoors()
 
     selected_index = getRandomDoorIndex()
@@ -104,16 +116,16 @@ def runGame():
 
     removeBadDoor()
 
-    selectNewDoor()
+    if chooseNewDoor:
+        selectNewDoor()
 
-    determineOutcome(selected_index)
+    determineOutcome(chooseNewDoor)
 
     resetDoors()
 
-    loops = loops + 1
-
-for _ in range(50):
-    runGame()
+for _ in range(loops):
+    runGame(True)
+    runGame(False)
 
 
 getFinalTally()
