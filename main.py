@@ -6,7 +6,7 @@ first_winners = 0
 first_losers = 0
 new_door_winners = 0
 new_door_losers = 0
-loops = 10000
+loops = 100000
 
 
 door_one = {
@@ -80,16 +80,11 @@ def determineOutcome(newDoorSelected):
             new_door_winners += 1
         else:
             first_winners = first_winners + 1
-
-        print('winner winner chicken dinner')
-
     else:
         if newDoorSelected:
             new_door_losers += 1
         else:
             first_losers = first_losers + 1
-
-        print('u suck')
 
 def getFinalTally():
     print(first_winners, 'Winners while keeping their door')
